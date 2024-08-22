@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Calculadora de Amortizacion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.4/css/dataTables.dataTables.css" />
+    <script src="https://cdn.datatables.net/2.1.4/js/dataTables.js"></script>
+
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+    
+</head>
+<body class="bg-black text-white">
+
+<div class="m-10">
+    <div class="mt-4 flex flex-col bg-gray-900 rounded-lg p-4 shadow-sm">
+
+        <div class="text-white text-center">
+            <h2 class="font-bold text-3xl">Amortización</h2>
+            <h4 class="">Calculadora de Amortizaciones</h4>
+        </div>
+
+        <div class="flex gap-x-4">
+            <div class="min-w-40">
+                <div>
+                    <div id="divAmount" class="m-1 mb-2">
+                        <label class="text-gray-600">
+                            Monto
+                        </label>
+                        <div class="relative mt-1 max-w-xs text-gray-500">
+                            <span class="h-6 text-gray-400 absolute left-3 inset-y-0 my-auto">
+                                <i class="fa-solid fa-dollar-sign"></i>
+                            </span>
+                            <input id="amount" type="text" placeholder="0.00" class="w-full pl-8 pr-16 py-2 appearance-none bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg" />
+                            <div class="absolute inset-y-0 right-3 flex items-center">
+                                <select id="amount-currency" class="text-sm bg-transparent outline-none px-1 rounded-lg h-full">
+                                    <option>MXN</option>
+                                    <option>USD</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="divRate" class="m-1 mb-2">
+                        <label class="text-gray-600">
+                            Tasa
+                        </label>
+                        <div class="relative mt-1 max-w-xs text-gray-500">
+                            <span class="h-6 text-gray-400 absolute left-3 inset-y-0 my-auto">
+                                <i class="fa-solid fa-percent"></i>
+                            </span>
+                            <input id="rate" type="text" placeholder="0.00" class="w-full pl-8 pr-16 py-2 appearance-none bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg" />
+                        </div>
+                    </div>
+
+                    <div id="divPeriods" class="m-1 mb-2">
+                        <label class="text-gray-600">
+                            Cantidad de Periodos
+                        </label>
+                        <div class="relative mt-1 max-w-xs text-gray-500">
+                            <span class="h-6 text-gray-400 absolute left-3 inset-y-0 my-auto">
+                                <i class="fa-solid fa-hashtag"></i>
+                            </span>
+                            <input id="periods" type="text" placeholder="0" class="w-full pl-8 pr-16 py-2 appearance-none bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg" />
+                        </div>
+                    </div>
+
+                    <div id="divDateStart" class="m-1 mb-2">
+                        <label class="text-gray-600">
+                            Fecha de Inicio
+                        </label>
+                        <div class="relative mt-1 max-w-xs text-gray-500">
+                            <span class="h-6 text-gray-400 absolute left-3 inset-y-0 my-auto">
+                                <i class="fa-solid fa-calendar"></i>
+                            </span>
+                            <input id="dateStart" type="date" placeholder="" class="w-full pl-8 pr-16 py-2 appearance-none bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg" />
+                        </div>
+                    </div>
+
+                </div>
+                <div>
+                    <x-amortizacion.checkbox :id="'Anualidad'" :label="'Anualidad'" />
+                    <x-amortizacion.checkbox :id="'Descuentos'" :label="'Descuentos'" />
+                    <x-amortizacion.checkbox :id="'Enganches'" :label="'Enganches'" />
+                </div>
+
+                <div class="mt-4 flex justify-center">
+                    <button id="btnCalcular" type="button" class="bg-blue-500 text-white rounded-md p-2 outline-2">
+                        Calcular <i class="ml-2 fa-solid fa-calculator"></i>
+                    </button>
+                </div>
+
+            </div>
+            <div class="flex-auto text-center text-white">
+                <table id="dt" class="display">
+                    <thead>
+                        <tr class="text-center">
+                            <th class="">#</th>
+                            <th>Saldo</th>
+                            <th>Pago</th>
+                            <th>Capital</th>
+                            <th>Intereses</th>
+                            <th>Fecha</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>$20,000</td>
+                            <td>$4,500</td>
+                            <td>$3,500</td>
+                            <td>$1,000</td>
+                            <td>2011/04/25</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>$20,000</td>
+                            <td>$4,500</td>
+                            <td>$3,500</td>
+                            <td>$1,000</td>
+                            <td>2011/04/25</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>    
+</div>
+
+<script>
+    $(document).ready(function() {
+        var dtTable = $('#dt').DataTable({
+            // dom: '<B<"#dt-top"lf><rt>ip>',//Definimos los elementos del control de tabla
+            paging: false,
+            searching: false,
+            dom: '<"float-right" B>frtp', // Define la posición de los botones en la tabla
+            buttons: [
+                {extend:'copy'  , text:'<div class="border border-indigo-500 rounded-md p-1 px-2"><i class="fa-lg fa-regular fa-copy text-stone-300"></i></div>'},
+                {extend:'excel' , text:'<div class="border border-indigo-500 rounded-md p-1 px-2"><i class="fa-lg fa-regular fa-file-excel text-emerald-600"></i></div>'},
+                {extend:'pdf'   , text:'<div class="border border-indigo-500 rounded-md p-1 px-2"><i class="fa-lg fa-regular fa-file-pdf text-rose-600"></i></div>'},
+                {extend:'print' , text:'<div class="border border-indigo-500 rounded-md p-1 px-2"><i class="fa-lg fa-solid fa-print"></i></div>'},
+            ] // Botones a incluir
+        });
+
+        function calcular() {
+            alert('calcular')
+        }
+
+        $('#btnCalcular').on('click', function( event ) {
+            // datos
+            let amount      = parseFloat($('#amount').val());
+            let periods     = parseInt($('#periods').val());
+            let rate        = parseFloat($('#rate').val()) / 100;
+            let dateStart   = new Date($('#dateStart').val());
+
+            if (isNaN(amount) || isNaN(periods) || isNaN(rate) || isNaN(dateStart.getTime())) {
+                alert('Por favor, ingresa valores válidos.');
+                return;
+            }
+
+            const monthRate = rate / 12 || 1;
+            const payment = (amount * monthRate) / (1 - Math.pow(1 + monthRate, -periods));
+
+            dtTable.clear();
+            let saldoInsoluto = amount;
+            for (let i = 0; i < periods; i++) {
+                let interes = saldoInsoluto * monthRate;
+                let capital = payment - interes;
+                saldoInsoluto -= capital;
+
+                // Calcular la fecha de vencimiento para cada pago
+                var fechaVencimiento = new Date(dateStart);
+                fechaVencimiento.setMonth(dateStart.getMonth() + i);
+
+                // Agregar la fila a la tabla
+                dtTable.row.add([
+                    i + 1,
+                    `$ ${saldoInsoluto.toFixed(2)}`,
+                    `$ ${payment.toFixed(2)}`,
+                    `$ ${capital.toFixed(2)}`,
+                    `$ ${interes.toFixed(2)}`,
+                    fechaVencimiento.toISOString().split('T')[0]
+                ]);
+            }
+            dtTable.draw();
+        });
+
+        const updateTable = (data) => {
+            dtTable.clear();
+            dtTable.row.add([
+                data
+            ]);
+            dtTable.draw();
+        }
+    });
+</script>
+
+</body>
+</html>
