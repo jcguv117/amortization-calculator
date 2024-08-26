@@ -6,6 +6,11 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Calculadora de Amortizacion</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+          darkMode: 'class',
+        }
+    </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
@@ -20,21 +25,46 @@
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
     
 </head>
-<body class="bg-black text-white">
+<body class="dark:bg-black dark:text-white bg-white text-black">
+
+    <div class="my-2 mx-4 flex flex-row-reverse">
+
+        <input
+            type="checkbox"
+            id="dark-mode"
+            value="on"
+            class="hidden peer"
+            />
+
+        <label
+            for="dark-mode"
+            class="flex z-10 items-center peer relative justify-center w-8 h-8 shadow-lg duration-300 [box-shadow:1px_1px_0px_1px_#eab92d] border-2 border-gray-800 peer-checked:border-2 peer-checked:border-gray-800 rounded-lg cursor-pointer text-neutral-50 peer-checked:[box-shadow:1px_1px_0px_1px_#075985] peer-checked:hover:[box-shadow:1px_1px_0px_1px_#1e1e1e] hover:[box-shadow:1px_1px_0px_1px_#1e1e1e]"
+            >
+            
+        </label>
+
+        <div class="absolute p-1 stroke-sky-800 w-8 h-8 duration-300 peer-checked:opacity-100 opacity-0">
+            <i class="fa-xl fa-solid fa-moon text-sky-800"></i>
+        </div>
+
+        <div class="absolute p-1 stroke-yellow-500 w-8 h-8 duration-300 peer-checked:opacity-0 opacity-100">
+            <i class="fa-xl fa-solid fa-sun text-yellow-500"></i>
+        </div>
+    </div>
 
 <div class="m-10">
 
     <div id="alert-msg"></div>
 
-    <div class="mt-4 flex flex-col bg-gray-900 rounded-lg p-4 shadow-sm">
+    <div class="mt-4 flex flex-col dark:bg-gray-900 bg-white border-2 border-gray-300 rounded-lg p-4 shadow-sm">
 
-        <div class="text-white text-center">
+        <div class="text-center">
             <h2 class="font-bold text-3xl">Amortización</h2>
             <h4 class="">Calculadora de Amortizaciones</h4>
         </div>
 
-        <div class="flex gap-x-4">
-            <div class="min-w-40">
+        <div class="flex md:flex-row flex-col gap-x-4 min-w-40">
+            <div class="min-w-40 flex justify-center">
                 <div>
                     <div id="divAmount" class="m-1 mb-2">
                         <label class="text-gray-600">
@@ -90,6 +120,12 @@
                         </div>
                     </div>
 
+                    <div class="mt-4 flex justify-center">
+                        <button id="btnCalcular" type="button" class="bg-indigo-600 text-white rounded-md p-2 outline-2">
+                            Calcular <i class="ml-2 fa-solid fa-calculator"></i>
+                        </button>
+                    </div>    
+
                 </div>
                 <!-- <div>
                     <x-amortizacion.checkbox :id="'Anualidad'" :label="'Anualidad'" />
@@ -97,14 +133,9 @@
                     <x-amortizacion.checkbox :id="'Enganches'" :label="'Enganches'" />
                 </div> -->
 
-                <div class="mt-4 flex justify-center">
-                    <button id="btnCalcular" type="button" class="bg-indigo-600 text-white rounded-md p-2 outline-2">
-                        Calcular <i class="ml-2 fa-solid fa-calculator"></i>
-                    </button>
-                </div>
 
             </div>
-            <div class="flex-auto text-center text-white">
+            <div class="flex-auto text-center dark:text-white">
                 <table id="dt" class="display">
                     <thead>
                         <tr class="text-center">
@@ -144,7 +175,15 @@
 <script>
     const init = () => {
         let date = new Date();
-        $('#dateStart').val(date.toISOString().split('T')[0])
+        $('#dateStart').val(date.toISOString().split('T')[0]);
+
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            console.log("El modo oscuro está activado.");
+            // $('html').toggleClass('dark');
+        } else {
+            console.log("El modo oscuro no está activado.");
+        }
+
     }
 
     const alertMsg = (msg, icon='exclamation') => `        
@@ -164,12 +203,16 @@
     $(document).ready(function() {
         init();
 
+        $('#dark-mode').on('click', function() {
+            $('html').toggleClass('dark');
+        });
+
         var dtTable = $('#dt').DataTable({
             paging: false,
             searching: false,
             dom: '<"float-right" B>frtp', // Define la posición de los botones en la tabla
             buttons: [
-                {extend:'copy'  , text:'<div class="border border-indigo-500 rounded-md p-1 px-2"><i class="fa-lg fa-regular fa-copy text-stone-300"></i></div>'},
+                {extend:'copy'  , text:'<div class="border border-indigo-500 rounded-md p-1 px-2"><i class="fa-lg fa-regular fa-copy"></i></div>'},
                 {extend:'excel' , text:'<div class="border border-indigo-500 rounded-md p-1 px-2"><i class="fa-lg fa-regular fa-file-excel text-emerald-600"></i></div>'},
                 {extend:'pdf'   , text:'<div class="border border-indigo-500 rounded-md p-1 px-2"><i class="fa-lg fa-regular fa-file-pdf text-rose-600"></i></div>'},
                 {extend:'print' , text:'<div class="border border-indigo-500 rounded-md p-1 px-2"><i class="fa-lg fa-solid fa-print"></i></div>'},
