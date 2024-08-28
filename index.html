@@ -25,6 +25,18 @@
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
     
 </head>
+<style>
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            display: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="date"] {
+            -moz-appearance: textfield;
+            appearance: none;
+        }
+</style>
+
 <body class="dark:bg-black dark:text-white bg-white text-black">
 
     <div class="my-2 mx-4 flex flex-row-reverse">
@@ -67,7 +79,7 @@
             <div class="flex flex-col justify-center">
                 <div class="min-w-40 grid grid-cols-2 lg:grid-cols-1 px-0 lg:px-1 sm:px-10">
                     <div id="divAmount" class="m-1 mb-2 sm:px-6">
-                        <label class="text-gray-600">
+                        <label for="amount" class="text-gray-600">
                             Monto
                         </label>
                         <div class="relative mt-1 max-w-xs text-gray-500">
@@ -85,7 +97,7 @@
                     </div>
 
                     <div id="divRate" class="m-1 mb-2 sm:px-6">
-                        <label class="text-gray-600">
+                        <label for="rate" class="text-gray-600">
                             Tasa
                         </label>
                         <div class="relative mt-1 max-w-xs text-gray-500">
@@ -97,7 +109,7 @@
                     </div>
 
                     <div id="divPeriods" class="m-1 mb-2 sm:px-6">
-                        <label class="text-gray-600">
+                        <label for="periods" class="text-gray-600">
                             Cantidad de Periodos
                         </label>
                         <div class="relative mt-1 max-w-xs text-gray-500">
@@ -109,7 +121,7 @@
                     </div>
 
                     <div id="divDateStart" class="m-1 mb-2 sm:px-6">
-                        <label class="text-gray-600">
+                        <label for="dateStart" class="text-gray-600">
                             Fecha de Inicio
                         </label>
                         <div class="relative mt-1 max-w-xs text-gray-500">
@@ -201,6 +213,10 @@
         $('#dark-mode').on('click', function() {
             $('html').toggleClass('dark');
         });
+
+        $('#dateStart').on('click', function () {
+            this.showPicker();
+        })
 
         var dtTable = $('#dt').DataTable({
             paging: false,
