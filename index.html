@@ -63,10 +63,10 @@
             <h4 class="">Calculadora de Amortizaciones</h4>
         </div>
 
-        <div class="flex md:flex-row flex-col gap-x-4 min-w-40">
-            <div class="min-w-40 flex justify-center">
-                <div>
-                    <div id="divAmount" class="m-1 mb-2">
+        <div class="flex lg:flex-row lg:px-10 flex-col gap-4 min-w-40">
+            <div class="flex flex-col justify-center">
+                <div class="min-w-40 grid grid-cols-2 lg:grid-cols-1 px-0 lg:px-1 sm:px-10">
+                    <div id="divAmount" class="m-1 mb-2 sm:px-6">
                         <label class="text-gray-600">
                             Monto
                         </label>
@@ -84,7 +84,7 @@
                         </div>
                     </div>
 
-                    <div id="divRate" class="m-1 mb-2">
+                    <div id="divRate" class="m-1 mb-2 sm:px-6">
                         <label class="text-gray-600">
                             Tasa
                         </label>
@@ -96,7 +96,7 @@
                         </div>
                     </div>
 
-                    <div id="divPeriods" class="m-1 mb-2">
+                    <div id="divPeriods" class="m-1 mb-2 sm:px-6">
                         <label class="text-gray-600">
                             Cantidad de Periodos
                         </label>
@@ -108,7 +108,7 @@
                         </div>
                     </div>
 
-                    <div id="divDateStart" class="m-1 mb-2">
+                    <div id="divDateStart" class="m-1 mb-2 sm:px-6">
                         <label class="text-gray-600">
                             Fecha de Inicio
                         </label>
@@ -119,24 +119,19 @@
                             <input id="dateStart" type="date" placeholder="" class="w-full pl-8 pr-16 py-2 appearance-none bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg" />
                         </div>
                     </div>
-
-                    <div class="mt-4 flex justify-center">
-                        <button id="btnCalcular" type="button" class="bg-indigo-600 text-white rounded-md p-2 outline-2">
-                            Calcular <i class="ml-2 fa-solid fa-calculator"></i>
-                        </button>
-                    </div>    
-
+                    
                 </div>
-                <!-- <div>
-                    <x-amortizacion.checkbox :id="'Anualidad'" :label="'Anualidad'" />
-                    <x-amortizacion.checkbox :id="'Descuentos'" :label="'Descuentos'" />
-                    <x-amortizacion.checkbox :id="'Enganches'" :label="'Enganches'" />
-                </div> -->
+
+                <div class="mt-4 flex justify-center">
+                    <button id="btnCalcular" type="button" class="bg-indigo-600 text-white rounded-md p-2 outline-2">
+                        Calcular <i class="ml-2 fa-solid fa-calculator"></i>
+                    </button>
+                </div>    
 
 
             </div>
-            <div class="flex-auto text-center dark:text-white">
-                <table id="dt" class="display">
+            <div class="max-w-full lg:w-3/5 flex-auto text-center dark:text-white">
+                <table id="dt" class="display overflow-auto">
                     <thead>
                         <tr class="text-center">
                             <th class="">#</th>
@@ -210,6 +205,7 @@
         var dtTable = $('#dt').DataTable({
             paging: false,
             searching: false,
+            scrollX: true,
             dom: '<"float-right" B>frtp', // Define la posición de los botones en la tabla
             buttons: [
                 {extend:'copy'  , text:'<div class="border border-indigo-500 rounded-md p-1 px-2"><i class="fa-lg fa-regular fa-copy"></i></div>'},
