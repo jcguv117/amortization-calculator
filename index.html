@@ -66,8 +66,6 @@
 
 <div class="m-2 text-sm md:m-10 md:text-lg">
 
-    <div id="alert-msg"></div>
-
     <div class="mt-4 flex flex-col dark:bg-gray-900 bg-white border-2 border-gray-300 rounded-lg p-4 shadow-sm">
 
         <div class="text-center">
@@ -179,6 +177,10 @@
     </div>    
 </div>
 
+<div class="absolute z-10 top-4 w-full px-4">
+    <div id="alert-msg" class="hidden"></div>
+</div>
+
 <script>
     const init = () => {
         let date = new Date();
@@ -194,7 +196,7 @@
     }
 
     const alertMsg = (msg, icon='exclamation') => `        
-        <div class="mt-12 mx-4 px-4 rounded-md border-l-4 border-indigo-500 bg-indigo-200 md:max-w-2xl md:mx-auto">
+        <div class="px-4 rounded-md border-l-4 border-indigo-500 bg-indigo-200 md:max-w-2xl md:mx-auto">
             <div class="flex justify-between py-3">
               <div class="flex">
                 <div class="self-center ml-3">
@@ -206,6 +208,16 @@
               </div>
             </div>
         </div>`;
+
+    const showMsg = (message, elementID, duration=5000) => {
+        if($(elementID).css('display') === 'block') return;
+        $(elementID).html( message ).fadeIn(300);
+        setTimeout(() => {
+            $(elementID).fadeOut(300, () => {
+                $(elementID).html('');
+            });
+        }, duration);
+    }
 
     $(document).ready(function() {
         init();
@@ -239,10 +251,7 @@
             let dateStart   = new Date($('#dateStart').val());
 
             if (isNaN(amount) || isNaN(periods) || isNaN(rate) || isNaN(dateStart.getTime())) {
-                $('#alert-msg').html( alertMsg('Por favor, ingresa valores válidos.') );
-                setTimeout(() => {
-                    $('#alert-msg').html('');
-                }, 5000);
+                showMsg(alertMsg('Por favor, ingresa valores válidos.'), '#alert-msg')
                 return;
             }
 
